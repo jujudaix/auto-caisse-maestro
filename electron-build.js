@@ -14,7 +14,26 @@ if (!fs.existsSync(electronDir)) {
   fs.mkdirSync(electronDir, { recursive: true });
 }
 
+// Vérifier si le dossier de sortie existe et le nettoyer si nécessaire
+const releaseDir = path.join(__dirname, 'release');
+function cleanupReleaseDir() {
+  if (fs.existsSync(releaseDir)) {
+    console.log('🧹 Nettoyage du dossier release...');
+    try {
+      // Sur Windows, on peut avoir besoin de plusieurs tentatives
+      fs.rmSync(releaseDir, { recursive: true, force: true });
+      console.log('✅ Dossier release nettoyé avec succès');
+    } catch (err) {
+      console.warn('⚠️ Impossible de supprimer complètement le dossier release:', err.message);
+      console.log('➡️ Tentative de construction malgré tout...');
+    }
+  }
+}
+
 try {
+  // Nettoyer le dossier release avant de commencer
+  cleanupReleaseDir();
+
   // Construire l'application Vite
   console.log('📦 Construction de l\'application Vite...');
   execSync('npm run build', { stdio: 'inherit' });
@@ -31,7 +50,7 @@ try {
 
   // Construire l'application Electron
   console.log('📦 Construction de l\'exécutable Electron...');
-  execSync('npx electron-builder build --win --publish never', { 
+  execSync('npx electron-builder build --win --publish never --config electron-builder.yml', { 
     stdio: 'inherit',
     env: { ...process.env, NODE_ENV: 'production' }
   });
