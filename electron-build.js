@@ -1,7 +1,12 @@
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Obtenir le chemin du répertoire actuel en ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // S'assurer que le dossier electron existe
 const electronDir = path.join(__dirname, 'electron');
