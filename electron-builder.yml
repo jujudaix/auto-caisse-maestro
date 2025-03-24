@@ -11,6 +11,10 @@ files:
   - "dist/**/*"
   - "electron/**/*"
 
+extraMetadata:
+  main: "electron/main.js"
+  type: "module"
+
 win:
   target:
     - target: "nsis"
